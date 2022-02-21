@@ -41,8 +41,38 @@ def construct_df(j_paths):
   df = pd.DataFrame(data)
   return df
 
+def filter_df(df):
+  data = []
+  for index, row in df.iterrows():
+    heading = row['heading'].lower()
+    para = row['paragraph']
+
+    flag = False
+
+    #小标题若包含 method, data, abstract, 则包含当前段落
+    include = ['method','data','abstract']
+    for keyword in include:
+      if keyword in heading:
+        flag = True
+
+    #段落内容包含data，则包含当前段落
+    if 'data' in para:
+      flag = True
+      
+    #段落小标题包含下列关键词，则移除当前段落
+    exclude = ['related','literature','previous','background']
+    for keyword in exclude:
+      if keyword in heading:
+        flag = False
+
+    if flag == True:
+      data.append(row)  
+  df = pd.DataFrame(data)
+  return df
+
 df = construct_df(j_paths)
-df.to_excel('df_all.xlsx')
+df_2 = filter_df(df)
+df_2.to_excel('./df_filtered.xlsx')
 
 
 

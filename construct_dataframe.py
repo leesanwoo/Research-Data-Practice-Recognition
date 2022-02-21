@@ -13,7 +13,8 @@ def construct_df(j_paths):
   #j_paths = list[] -> './Cell/structuredText' , ...
   data = []
   for j_path in j_paths:
-    for p_path in [j_path + '/' + x for x in os.listdir(j_path)]:
+    #只选取前15篇文章
+    for p_path in [j_path + '/' + x for x in os.listdir(j_path)][:15]:
       with open(p_path, encoding='utf-8') as paper_pointer:
         paper = json.load(paper_pointer)
         #有些文件没有issue这个key，在此情况下issue的默认值为0
@@ -27,7 +28,7 @@ def construct_df(j_paths):
 
         datum = {'discipline':journal_discipline[journal_name], 'journal':journal_name, 'volume': paper['volume'],\
            'issue' : paper['issue'], 'date': paper['date'],\
-          'title':paper['title'], 'authors': paper['authors']}
+          'title':paper['title'], 'author': paper['author']}
         for chapter in paper.keys():
           if chapter not in datum:
             datum_p = datum
